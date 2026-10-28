@@ -5,8 +5,9 @@
   import { tenantOf } from '#lib/kb/locales';
   import { groupByProblem, type Problem } from '#lib/kb/problems';
 
-  // tickets: problem → issue URL in the tracker that now owns it.
-  let { ticket, tickets }: { ticket: number; tickets: Partial<Record<Problem, string>> } = $props();
+  // tickets: problem → the issue that now owns it, and what engineering did about it.
+  type Owner = { url: string; outcome: string };
+  let { ticket, tickets }: { ticket: number; tickets: Partial<Record<Problem, Owner>> } = $props();
 
   const rows = $derived((reports as Report[]).filter((r) => r.mergedInto === ticket));
   const merged = $derived(uniqueById(rows));
@@ -21,7 +22,7 @@
 
 <table>
   <thead>
-    <tr><th>problem</th><th>reports</th><th>tenants</th><th>seen</th><th>ticket</th></tr>
+    <tr><th>problem</th><th>reports</th><th>tenants</th><th>seen</th><th>ticket</th><th>outcome</th></tr>
   </thead>
   <tbody>
     {#each groups as g (g.problem)}
@@ -31,8 +32,9 @@
         <td>{g.tenants}</td>
         <td>{g.firstSeen} → {g.lastSeen}</td>
         <td>
-          {#if tickets[g.problem]}<a href={tickets[g.problem]}>{issueNo(tickets[g.problem]!)}</a>{:else}<span class="none">no ticket</span>{/if}
+          {#if tickets[g.problem]}<a href={tickets[g.problem]!.url}>{issueNo(tickets[g.problem]!.url)}</a>{:else}<span class="none">no ticket</span>{/if}
         </td>
+        <td>{tickets[g.problem]?.outcome ?? 'open'}</td>
       </tr>
     {/each}
   </tbody>

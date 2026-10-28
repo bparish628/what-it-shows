@@ -13,15 +13,20 @@ signature: v1.eyJzdWIiOiI2MjQ1IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYX
   import Callout from '#lib/kb/Callout.svelte';
 
   const REPO = 'https://github.com/bparish628/what-it-shows/issues';
-  const tickets = { parser: REPO + '/1', hint: REPO + '/2', 'one-day move': REPO + '/3' };
+  const tickets = {
+    parser: { url: REPO + '/1', outcome: 'fixed: fix(dates), 05 Oct' },
+    hint: { url: REPO + '/2', outcome: "won't fix: booking-v3 retired" },
+    'one-day move': { url: REPO + '/3', outcome: 'open' },
+  };
 </script>
 
-[#4471](/kb/incidents/4471) is marked *known: one issue, one fix queued*. It is not one issue.
-Its reports hold three problems, and the queued parser fix closes only the first one.
+[#4471](/kb/incidents/4471) was marked *known: one issue, one fix queued*. It was not one issue.
+Its reports hold three problems. Engineering closed #4471 on 05 Oct: the parser is fixed and the
+booking-v3 form is retired. That ends two of the three problems.
 
 <Callout kind="warn">
-Do not close #4471's reports when the parser fix ships. The hint and one-day reports stay broken. Each problem
-now has its own ticket.
+The one-day moves are still open. Neither change touches time zones. If a report says the invite came one day
+early, add it to the one-day ticket, not to #4471.
 </Callout>
 
 ## The problems
@@ -34,7 +39,8 @@ now has its own ticket.
   tenants type the month first, and the form reads the day first. The fix is the hint, not the parser.
 - **`one-day move`**: the invite lands one day early ("Client in Lisbon got Tuesday. Client in Toronto got
   Monday."). Day and month are not swapped. This is a time zone problem. The desk had noted these
-  (`desk-notes.json`), but #4471's table counted them under `parser` because of their tenant.
+  (`desk-notes.json`). The desk's own view (#4471's table) counts them under `parser` by tenant,
+  so the parser ticket's count includes them. This table counts them once, under their own problem.
 
 ## How #4471 hid them
 
