@@ -34,3 +34,8 @@ Support desk. Decision records: whoever signed them.
 ---
 
 Exported 2026-10-04 from the `support` repo, `apps/kb/` → `src/`.
+
+## Build
+
+`npm install`, then `npx vite build`. The rendered pages are committed in `rendered/`
+(`rendered/kb/incidents/4471-split.html` is the #4471 split page as the desk sees it).
